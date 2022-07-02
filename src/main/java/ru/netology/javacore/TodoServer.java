@@ -28,17 +28,17 @@ public class TodoServer {
     }
 
 
-    public void start() {
+    public void start() throws RuntimeException {
         System.out.println("Starting server at " + port + "...");
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (true) {
-                try (
-                        Socket socket = serverSocket.accept();
-                        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        PrintWriter out = new PrintWriter(socket.getOutputStream())
-                ) {
+                try (Socket socket = serverSocket.accept();
+                     BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                     PrintWriter out = new PrintWriter(socket.getOutputStream())) {
+
                     final String json = in.readLine();
                     final Task result = jsonToData(json);
+
                     switch (result.getType()) {
                         case ADD:
                             todos.addTask(result.getTask());
@@ -46,10 +46,6 @@ public class TodoServer {
                         case REMOVE:
                             todos.removeTask(result.getTask());
                             break;
-                        case LIST:
-                            todos.getAllTasks();
-                            break;
-
                     }
                     out.println(todos.getAllTasks());
                 }

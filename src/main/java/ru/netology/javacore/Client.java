@@ -23,5 +23,6 @@ public class Client {
             System.out.println(in.readLine());
 
         }
+
     }
 }
